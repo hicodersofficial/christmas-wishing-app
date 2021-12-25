@@ -13,62 +13,65 @@ If you wanna check your name in the followers list then you can find it in [user
 - `audioplayers` package for playing music.
 - For users data I did `Cross Site Scripting (xss)` in instagram browser dev tools.
 
-- Here how I scraped user data.
+<hr />
 
-  > **Why did I need to scrap followers data?** <br />According to this [answer on stackoverflow ](https://stackoverflow.com/a/39876178/10285324) I came to know that instagram doesn't provide api for get list of your follower or following. <br />
-  > Show I thought it will be cool to use my dirty skills. 😜
+⚠️ **Not Recommended** ⚠️
 
-  > **Note:** This code works for now but in future this code may break due to dom element changes. (Current test was done on windows 11 google chrome.)
+**Here how I scraped user data.**
 
-  1. Open follower modal from your profile.
-  2. Now open dev tools and follow these steps.
-  3. Create `users` variable to store all users.
+> **Why did I need to scrap followers data?** <br />According to this [answer on stackoverflow ](https://stackoverflow.com/a/39876178/10285324) I came to know that instagram doesn't provide api for get list of your follower or following. <br />
+> Show I thought it will be cool to use my dirty skills. 😜
 
-  ```js
-  let users = [];
-  ```
+> **Note:** This code works for now but in future this code may break due to dom element changes. (Current test was done on windows 11 google chrome.)
 
-  4. Use this code to scroll your and load all followers.
+1. Open follower modal from your profile.
+2. Now open dev tools and follow these steps.
+3. Create `users` variable to store all users.
 
-  > **Note:** This step may take time depending on your followers. For me it took around 1 hour.
+```js
+let users = [];
+```
 
-  ```javascript
-  function scroll() {
-    const container = document.querySelector(
-      "body > div.RnEpo.Yx5HN > div > div > div.isgrP"
-    );
-    container.scrollTo(0, container.scrollHeight);
-    setTimeout(() => scroll(), 4000);
-  }
-  scroll();
-  ```
+4. Use this code to scroll your and load all followers.
 
-  5. Once all users loaded use below code to convert it into json.
+> **Note:** This step may take time depending on your followers. For me it took around 1 hour.
 
-  ```js
-  document
-    .querySelectorAll(
-      "body > div.RnEpo.Yx5HN > div > div > div.isgrP > ul > div > li"
-    )
-    .forEach((li, i) => {
-      const imgUrl =
-        li.firstElementChild.firstElementChild.firstElementChild
-          .firstElementChild.children[1].firstElementChild.src;
-      const name =
-        li.firstElementChild.firstElementChild.children[1].children[1]
-          .innerText;
-      const username =
-        li.firstElementChild.firstElementChild.children[1].firstElementChild
-          .firstElementChild.innerText;
-      const user = { imgUrl, name, username };
-      users.push(user);
-    });
-  ```
+```javascript
+function scroll() {
+  const container = document.querySelector(
+    "body > div.RnEpo.Yx5HN > div > div > div.isgrP"
+  );
+  container.scrollTo(0, container.scrollHeight);
+  setTimeout(() => scroll(), 4000);
+}
+scroll();
+```
 
-  6. Now just type `users` variable in dev console and right click and click on `copy object`.
-  7. Done!
+5. Once all users loaded use below code to convert it into json.
 
-  > **Note:** If you wanna use this app to wish your followers then you just need to replace my `./assets/data/users.json` to yours. 🥳
+```js
+document
+  .querySelectorAll(
+    "body > div.RnEpo.Yx5HN > div > div > div.isgrP > ul > div > li"
+  )
+  .forEach((li, i) => {
+    const imgUrl =
+      li.firstElementChild.firstElementChild.firstElementChild.firstElementChild
+        .children[1].firstElementChild.src;
+    const name =
+      li.firstElementChild.firstElementChild.children[1].children[1].innerText;
+    const username =
+      li.firstElementChild.firstElementChild.children[1].firstElementChild
+        .firstElementChild.innerText;
+    const user = { imgUrl, name, username };
+    users.push(user);
+  });
+```
+
+6. Now just type `users` variable in dev console and right click and click on `copy object`.
+7. Done!
+
+> **Note:** If you wanna use this app to wish your followers then you just need to replace my `./assets/data/users.json` to yours. 🥳
 
 # **[Android Apk](./release/app-release.apk)**
 
