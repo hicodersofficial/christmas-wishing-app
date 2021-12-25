@@ -59,23 +59,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void loadUsers() async {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     final List<Widget> loadedUsers = [];
     if (_users.length - _seedIndex >= _inViewElement) {
       for (var i = 0; i < _inViewElement; i++) {
         loadedUsers.add(
-          UserTile(
-              _users[_seedIndex + i],
-              _randomPosition(MediaQuery.of(context).size.height - 100),
-              _randomPosition(MediaQuery.of(context).size.width - 100)),
+          UserTile(_users[_seedIndex + i], _randomPosition(height - 100),
+              _randomPosition(width - 100)),
         );
       }
     } else {
       for (var i = 0; i < _users.length - _seedIndex; i++) {
         loadedUsers.add(
-          UserTile(
-              _users[_seedIndex + i],
-              _randomPosition(MediaQuery.of(context).size.height - 100),
-              _randomPosition(MediaQuery.of(context).size.width - 100)),
+          UserTile(_users[_seedIndex + i], _randomPosition(height - 100),
+              _randomPosition(width - 100)),
         );
       }
     }
@@ -102,6 +100,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SizedBox(
         height: double.infinity,
@@ -112,7 +113,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   FadeInDown(
                     child: Lottie.asset(
                       'assets/animations/anime-1.json',
-                      height: MediaQuery.of(context).size.width,
+                      width: width,
                       controller: _controller,
                       onLoaded: (LottieComposition composition) {
                         _controller.duration =
@@ -123,64 +124,74 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 ],
               )
-            : Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  FadeIn(
-                    child: Lottie.asset(
-                      'assets/animations/anime-4.json',
+            : SizedBox(
+                width: double.infinity,
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    FadeIn(
+                      child: Lottie.asset(
+                        'assets/animations/anime-4.json',
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: 80,
-                    child: Builder(builder: (context) {
-                      return FadeInUp(
+                    Positioned(
+                      bottom: 80,
+                      child: FadeInUp(
                         child: Lottie.asset(
                           'assets/animations/anime-2.json',
-                          height: MediaQuery.of(context).size.width,
+                          //   fixed width for different screen sizes.
+                          width: height > width
+                              ? height < 400
+                                  ? height - 100
+                                  : 400 < width
+                                      ? width - 100
+                                      : 400
+                              : 400,
                           animate: !_isShowingFollowers,
                         ),
-                      );
-                    }),
-                  ),
-                  if (_isShowingFollowers)
-                    Container(
-                      height: MediaQuery.of(context).size.height,
-                      color: const Color(0xB9000000),
+                      ),
                     ),
-                  Positioned(
-                    bottom: 20,
-                    width: MediaQuery.of(context).size.width - 100,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all(
-                            const EdgeInsets.all(15),
-                          ),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                    if (_isShowingFollowers)
+                      FadeIn(
+                        child: Container(
+                          height: height,
+                          color: const Color(0xB9000000),
+                        ),
+                      ),
+                    Positioned(
+                      bottom: 20,
+                      width: width - 100,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                              const EdgeInsets.all(15),
                             ),
-                          )),
-                      child: Text(_isShowingFollowers ? "Stop" : "Start"),
-                      onPressed: () {
-                        if (_isShowingFollowers) {
-                          setState(() {
-                            _isShowingFollowers = false;
-                            _seedIndex += _inViewElement;
-                            _usersInView = [];
-                          });
-                        } else {
-                          setState(() {
-                            _isShowingFollowers = true;
-                          });
-                          loadUsers();
-                        }
-                      },
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            )),
+                        child: Text(_isShowingFollowers ? "Stop" : "Start"),
+                        onPressed: () {
+                          if (_isShowingFollowers) {
+                            setState(() {
+                              _isShowingFollowers = false;
+                              _seedIndex += _inViewElement;
+                              _usersInView = [];
+                            });
+                          } else {
+                            setState(() {
+                              _isShowingFollowers = true;
+                            });
+                            loadUsers();
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  ..._usersInView
-                ],
+                    ..._usersInView
+                  ],
+                ),
               ),
       ),
     );

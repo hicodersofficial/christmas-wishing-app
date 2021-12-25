@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:christmas/home.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,12 +23,14 @@ class UserTile extends StatelessWidget {
           onTap: () async {
             await launch("https://instagram.com/${user.username}");
           },
-          child: CircleAvatar(
-            radius: 30,
-            backgroundImage: NetworkImage(
-              user.imageUrl,
+          child: FadeIn(
+            child: CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(
+                user.imageUrl,
+              ),
+              backgroundColor: const Color(0xFFFFDC8B),
             ),
-            backgroundColor: const Color(0xFFFFDC8B),
           ),
         ),
       ),
