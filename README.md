@@ -20,7 +20,7 @@ If you wanna check your name in the followers list then you can find it in [user
 **Here how I scraped user's data.**
 
 > **Why did I need to scrap followers data?** <br />According to this [answer on stackoverflow ](https://stackoverflow.com/a/39876178/10285324) I came to know that instagram doesn't provide api for getting list of your follower or following. <br />
-> Show I thought it will be cool to use my dirty skills. 😜
+> So I thought it will be cool to use my dirty skills. 😜
 
 > **Note:** This code works for now but in future this code may break due to dom element changes. (Current test was done on windows 11 google chrome.)
 
